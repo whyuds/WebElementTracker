@@ -104,7 +104,7 @@ function connectToDesktopApp() {
 // 开始监控
 function startMonitoring() {
   if (!selectedSelector) {
-    alert('请先选择要监控的元素');
+    alert('Please select the element you want to monitor first');
     return;
   }
   
@@ -137,13 +137,13 @@ function updateMonitoringStatus(monitoring) {
 function updateConnectionStatus(connected) {
   if (connected) {
     connectionStatus.classList.add('connected');
-    connectionStatusText.textContent = '已连接';
+    connectionStatusText.textContent = 'connected';
     if (selectedSelector) {
       startMonitoringBtn.disabled = false;
     }
   } else {
     connectionStatus.classList.remove('connected');
-    connectionStatusText.textContent = '未连接';
+    connectionStatusText.textContent = 'disconnected';
     startMonitoringBtn.disabled = true;
   }
 }
@@ -162,7 +162,7 @@ async function loadSettings() {
       resolve({
         selector: result.selector || '',
         interval: result.interval || 5,
-        wsAddress: result.wsAddress || 'ws://localhost:8080'
+        wsAddress: result.wsAddress || 'ws://localhost:9555'
       });
     });
   });

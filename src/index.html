@@ -2,56 +2,56 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>桌面数据监控工具</title>
+  <title>WebElementTracker</title>
   <link rel="stylesheet" href="./styles/index.css">
 </head>
 <body>
   <div class="container">
-    <h1>桌面数据监控工具</h1>
+    <h1>WebElementTracker</h1>
     
     <div class="section">
-      <h2>连接状态</h2>
+      <h2>Connection Status</h2>
       <div class="status-indicator">
         <span class="status-dot" id="connectionStatus"></span>
-        <span id="connectionStatusText">等待连接</span>
+        <span id="connectionStatusText">Waiting for connection</span>
       </div>
       <div class="form-group">
-        <label for="wsPort">WebSocket端口：</label>
-        <input type="number" id="wsPort" min="1024" max="65535" value="8080">
-        <button id="changePortBtn" class="btn secondary">更改端口</button>
+        <label for="wsPort">WebSocket Port:</label>
+        <input type="number" id="wsPort" min="1024" max="65535" value="9555">
+        <button id="changePortBtn" class="btn secondary">Change Port</button>
       </div>
     </div>
 
     <div class="section">
-      <h2>悬浮窗设置</h2>
+      <h2>Widget Settings</h2>
       <div class="form-group">
-        <label for="toggleFloatingBtn">悬浮窗：</label>
-        <button id="toggleFloatingBtn" class="btn primary">显示/隐藏</button>
+        <label for="toggleFloatingBtn">Widget:</label>
+        <button id="toggleFloatingBtn" class="btn primary">Show/Hide</button>
       </div>
       <div class="form-group">
-        <label for="alwaysOnTop">始终置顶：</label>
+        <label for="alwaysOnTop">Always on Top:</label>
         <input type="checkbox" id="alwaysOnTop" checked>
       </div>
       <div class="form-group">
-        <label for="windowOpacity">窗口透明度：</label>
+        <label for="windowOpacity">Opacity:</label>
         <input type="range" id="windowOpacity" min="0.3" max="1" step="0.1" value="0.9">
         <span id="opacityValue">0.9</span>
       </div>
       <div class="form-group">
-        <label for="lockWindow">锁定位置：</label>
+        <label for="lockWindow">Lock Position:</label>
         <input type="checkbox" id="lockWindow">
       </div>
     </div>
 
     <div class="section">
-      <h2>监控数据</h2>
+      <h2>Monitoring Data</h2>
       <div id="monitorDataContainer" class="data-container">
-        <p class="no-data">暂无数据</p>
+        <p class="no-data">No data available</p>
       </div>
     </div>
 
     <div class="footer">
-      <p>使用Chrome扩展选择要监控的元素</p>
+      <p>Use Chrome extension to select elements to monitor</p>
     </div>
   </div>
 

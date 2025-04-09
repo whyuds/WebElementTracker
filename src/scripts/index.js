@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // 加载设置
 function loadSettings() {
   // 加载WebSocket端口
-  const port = store.get('wsPort', 8080);
+  const port = store.get('wsPort', 9555);
   wsPortInput.value = port;
   
   // 加载窗口设置
@@ -94,10 +94,10 @@ ipcRenderer.on('update-data', (event, data) => {
 function updateConnectionStatus(connected) {
   if (connected) {
     connectionStatus.classList.add('connected');
-    connectionStatusText.textContent = '已连接';
+    connectionStatusText.textContent = 'Connected';
   } else {
     connectionStatus.classList.remove('connected');
-    connectionStatusText.textContent = '未连接';
+    connectionStatusText.textContent = 'Disconnected';
   }
 }
 
@@ -112,14 +112,14 @@ function updateDataDisplay(data) {
   // 添加数据内容
   if (data.text) {
     const textElement = document.createElement('p');
-    textElement.textContent = `内容: ${data.text}`;
+    textElement.textContent = `content: ${data.text}`;
     dataElement.appendChild(textElement);
   }
   
   // 添加来源URL
   if (data.url) {
     const urlElement = document.createElement('p');
-    urlElement.innerHTML = `来源: <a href="${data.url}" target="_blank">${data.url}</a>`;
+    urlElement.innerHTML = `source: <a href="${data.url}" target="_blank">${data.url}</a>`;
     dataElement.appendChild(urlElement);
   }
   
@@ -127,7 +127,7 @@ function updateDataDisplay(data) {
   if (data.timestamp) {
     const timeElement = document.createElement('p');
     const date = new Date(data.timestamp);
-    timeElement.textContent = `更新时间: ${date.toLocaleString()}`;
+    timeElement.textContent = `Updated: ${date.toLocaleString()}`;
     dataElement.appendChild(timeElement);
   }
   

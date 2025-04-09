@@ -174,7 +174,7 @@ function setupElementSelector() {
   
   // 显示提示
   const toast = document.createElement('div');
-  toast.textContent = '请点击要监控的元素';
+  toast.textContent = 'Click on the element you want to monitor';
   toast.style.position = 'fixed';
   toast.style.top = '20px';
   toast.style.left = '50%';

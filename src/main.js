@@ -135,7 +135,7 @@ function createTray() {
   
   const contextMenu = Menu.buildFromTemplate([
     { 
-      label: '显示主窗口', 
+      label: 'Show Main Window', 
       click: () => {
         if (mainWindow) {
           mainWindow.show();
@@ -145,7 +145,7 @@ function createTray() {
       }
     },
     { 
-      label: '显示/隐藏悬浮窗', 
+      label: 'Show/Hide Floating Widget', 
       click: () => {
         if (floatingWindow) {
           if (floatingWindow.isVisible()) {
@@ -160,14 +160,14 @@ function createTray() {
     },
     { type: 'separator' },
     { 
-      label: '退出', 
+      label: 'Exit', 
       click: () => {
         app.quit();
       }
     }
   ]);
   
-  tray.setToolTip('桌面数据监控工具');
+  tray.setToolTip('WebElementTracker');
   tray.setContextMenu(contextMenu);
   
   tray.on('click', () => {
@@ -185,7 +185,7 @@ function createTray() {
 
 // 启动WebSocket服务器
 function startWebSocketServer() {
-  const port = store.get('wsPort', 8080);
+  const port = store.get('wsPort', 9555);
   
   wss = new WebSocket.Server({ port });
   

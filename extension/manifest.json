@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "桌面数据监控工具",
+  "name": "WebElementTracker",
   "version": "1.0",
-  "description": "监控网页元素并在桌面悬浮窗中显示",
+  "description": "A powerful tool that monitors web elements in real-time and displays changes on your desktop",
   "permissions": [
     "activeTab",
     "storage",

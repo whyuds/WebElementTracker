@@ -67,24 +67,24 @@ function updateDataDisplay(data) {
     // 没有内容
     const noDataElement = document.createElement('p');
     noDataElement.className = 'waiting';
-    noDataElement.textContent = '无数据';
+    noDataElement.textContent = 'No data available';
     dataContainer.appendChild(noDataElement);
   }
   
   // 更新来源信息
   if (data.url) {
-    dataSource.textContent = `来源: ${new URL(data.url).hostname}`;
+    dataSource.textContent = `Source: ${new URL(data.url).hostname}`;
     dataSource.title = data.url; // 完整URL作为提示
   } else {
-    dataSource.textContent = '来源: 未知';
+    dataSource.textContent = 'Source: Unknown';
   }
   
   // 更新时间戳
   if (data.timestamp) {
     const date = new Date(data.timestamp);
-    updateTime.textContent = `更新时间: ${date.toLocaleTimeString()}`;
+    updateTime.textContent = `Updated: ${date.toLocaleTimeString()}`;
   } else {
-    updateTime.textContent = '更新时间: --';
+    updateTime.textContent = 'Updated: --';
   }
 }
 
