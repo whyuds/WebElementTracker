@@ -1,11 +1,15 @@
 {
-  "name": "monitor-data-on-desktop",
-  "version": "1.0.0",
-  "description": "a powerful desktop tool that monitors specific web elements in real-time and displays their changes directly on your screen. This unobtrusive sticky widget stays on top of your workspace, providing instant visibility to the data that matters most to you",
+  "name": "web-element-tracker",
+  "version": "${process.env.APP_VERSION || '0.0.0'}",
+  "description": "A powerful desktop tool that monitors specific web elements in real-time and displays their changes directly on your screen. This unobtrusive sticky widget stays on top of your workspace, providing instant visibility to the data that matters most to you",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "clean": "rimraf dist",
+    "build": "npm run clean && electron-builder",
+    "build:win": "npm run clean && electron-builder --win",
+    "build:mac": "npm run clean && electron-builder --mac",
+    "package:extension": "cd extension && powershell Compress-Archive -Path * -DestinationPath ../dist/WebElementTracker-Extension.zip -Force"
   },
   "keywords": [
     "electron",
@@ -21,17 +25,30 @@
   },
   "devDependencies": {
     "electron": "^25.3.1",
-    "electron-builder": "^24.4.0"
+    "electron-builder": "^24.4.0",
+    "rimraf": "^6.0.1"
   },
   "build": {
-    "appId": "com.example.monitor-data-on-desktop",
+    "appId": "com.example.web-element-tracker",
     "productName": "WebElementTracker",
     "directories": {
       "output": "dist"
     },
+    "asar": true,
+    "forceCodeSigning": false,
+    "buildDependenciesFromSource": true,
     "win": {
-      "target": "nsis",
-      "icon": "src/assets/icon.ico"
+      "target": [
+        "nsis"
+      ],
+      "icon": "src/assets/icon.png"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "src/assets/icon.png",
+      "category": "public.app-category.utilities"
     }
   }
 }

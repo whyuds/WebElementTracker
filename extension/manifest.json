@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "WebElementTracker",
-  "version": "1.0",
+  "version": "1.0.3",
   "description": "A powerful tool that monitors web elements in real-time and displays changes on your desktop",
   "permissions": [
     "activeTab",
@@ -17,15 +17,15 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "images/icon.svg",
-      "48": "images/icon.svg",
-      "128": "images/icon.svg"
+      "16": "images/icon_16.png",
+      "48": "images/icon_48.png",
+      "128": "images/icon_128.png"
     }
   },
   "icons": {
-    "16": "images/icon.svg",
-    "48": "images/icon.svg",
-    "128": "images/icon.svg"
+    "16": "images/icon_16.png",
+    "48": "images/icon_48.png",
+    "128": "images/icon_128.png"
   },
   "content_scripts": [
     {

@@ -73,7 +73,7 @@ function updateDataDisplay(data) {
   
   // 更新来源信息
   if (data.url) {
-    dataSource.textContent = `Source: ${new URL(data.url).hostname}`;
+    dataSource.textContent = `${new URL(data.url).hostname}`;
     dataSource.title = data.url; // 完整URL作为提示
   } else {
     dataSource.textContent = 'Source: Unknown';
