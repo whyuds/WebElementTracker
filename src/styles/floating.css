@@ -1,0 +1,125 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+.container {
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(30, 30, 30, 0.85);
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  overflow: hidden;
+  -webkit-app-region: drag; /* 允许整个窗口拖拽 */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+  -webkit-app-region: drag; /* 允许拖拽 */
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.controls {
+  display: flex;
+  -webkit-app-region: no-drag; /* 控制按钮不参与拖拽 */
+}
+
+.control-btn {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 14px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.control-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+#closeBtn:hover {
+  background-color: rgba(232, 17, 35, 0.9);
+  color: white;
+}
+
+.content {
+  flex: 1;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.data-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(35px + 2.5vw); /* 增大响应式字体大小 */
+  font-weight: 600; /* 加粗字体 */
+  line-height: 1.5;
+  word-break: break-all;
+  white-space: pre-wrap;
+  padding: 20px;
+  text-align: center;
+  color: #2cc0ff; /* 更亮更鲜艳的蓝色 */
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* 添加文字阴影增强可读性 */
+}
+
+.info {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  gap: 10px;
+}
+
+.waiting {
+  color: #2cc0ff; /* 与数据显示一致的颜色 */
+  text-align: center;
+  font-style: italic;
+  margin-top: 20px;
+  font-size: calc(18px + 1.5vw); /* 增大等待文本字体大小 */
+  font-weight: 500; /* 稍微加粗 */
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* 匹配数据显示的文字阴影 */
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

@@ -1,0 +1,37 @@
+{
+  "name": "monitor-data-on-desktop",
+  "version": "1.0.0",
+  "description": "a powerful desktop tool that monitors specific web elements in real-time and displays their changes directly on your screen. This unobtrusive sticky widget stays on top of your workspace, providing instant visibility to the data that matters most to you",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "keywords": [
+    "electron",
+    "chrome-extension",
+    "websocket",
+    "monitor"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "electron": "^25.3.1",
+    "electron-builder": "^24.4.0"
+  },
+  "build": {
+    "appId": "com.example.monitor-data-on-desktop",
+    "productName": "WebElementTracker",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/icon.ico"
+    }
+  }
+}
