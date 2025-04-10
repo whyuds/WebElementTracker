@@ -12,6 +12,7 @@ const elementPreviewSpan = document.getElementById('elementPreview');
 const monitorIntervalInput = document.getElementById('monitorInterval');
 const wsAddressInput = document.getElementById('wsAddress');
 const connectWsBtn = document.getElementById('connectWs');
+const downloadAppBtn = document.getElementById('downloadApp');
 const startMonitoringBtn = document.getElementById('startMonitoring');
 const stopMonitoringBtn = document.getElementById('stopMonitoring');
 const connectionStatus = document.getElementById('connectionStatus');
@@ -33,10 +34,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 // 事件监听器
 selectElementBtn.addEventListener('click', selectElement);
 connectWsBtn.addEventListener('click', connectToDesktopApp);
+downloadAppBtn.addEventListener('click', openDownloadPage);
 startMonitoringBtn.addEventListener('click', startMonitoring);
 stopMonitoringBtn.addEventListener('click', stopMonitoring);
 monitorIntervalInput.addEventListener('change', saveSettings);
 wsAddressInput.addEventListener('change', saveSettings);
+
+// 打开下载页面
+function openDownloadPage() {
+  chrome.tabs.create({ url: 'https://github.com/whyuds/WebElementTracker/releases' });
+}
 
 // 连接到background script
 function connectToBackground() {

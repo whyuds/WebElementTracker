@@ -101,6 +101,47 @@ input[type="number"] {
   color: white;
 }
 
+.btn.info {
+  background-color: #ff9800;
+  color: white;
+}
+
+.btn.info:hover {
+  background-color: #e68900;
+}
+
+.download-app {
+  margin-top: 10px;
+}
+
+.download-hint {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.btn.info {
+  background-color: #ff9800;
+  color: white;
+}
+
+.btn.info:hover {
+  background-color: #e68900;
+}
+
+.download-app {
+  margin-top: 10px;
+}
+
+.download-hint {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+  text-align: center;
+  color: white;
+}
+
 .btn.danger:hover {
   background-color: #c53929;
 }
