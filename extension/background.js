@@ -139,6 +139,36 @@ function setupElementSelector() {
     document.removeEventListener('mouseout', window._elementSelectorMouseoutHandler);
     document.body.removeChild(highlight);
     window._elementSelectorActive = false;
+    
+    // 显示成功选择的提示
+    const successToast = document.createElement('div');
+    successToast.textContent = '元素已成功选择！请返回插件窗口继续操作';
+    successToast.style.position = 'fixed';
+    successToast.style.top = '20px';
+    successToast.style.left = '50%';
+    successToast.style.transform = 'translateX(-50%)';
+    successToast.style.padding = '10px 20px';
+    successToast.style.backgroundColor = '#4CAF50';
+    successToast.style.color = '#fff';
+    successToast.style.borderRadius = '4px';
+    successToast.style.zIndex = '10001';
+    successToast.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+    document.body.appendChild(successToast);
+    
+    // 尝试重新打开插件窗口
+    try {
+      chrome.runtime.sendMessage({
+        type: 'reopenPopup'
+      });
+    } catch (error) {
+      console.log('无法自动重新打开插件窗口', error);
+    }
+    
+    setTimeout(() => {
+      if (document.body.contains(successToast)) {
+        document.body.removeChild(successToast);
+      }
+    }, 5000);
   };
   
   // 生成CSS选择器
@@ -207,6 +237,21 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     } else {
       console.log('Popup port not available, queueing message');
       messageQueue.push(popupMessage);
+    }
+    return true;
+  }
+  
+  if (message.type === 'reopenPopup') {
+    console.log('Attempting to reopen popup');
+    // 尝试重新打开popup窗口
+    // 注意：由于Chrome扩展API的限制，这个功能可能不会在所有情况下都有效
+    try {
+      // Chrome MV3中尝试使用action API打开popup
+      if (chrome.action && chrome.action.openPopup) {
+        chrome.action.openPopup();
+      }
+    } catch (error) {
+      console.error('Failed to reopen popup:', error);
     }
     return true;
   }
