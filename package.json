@@ -7,7 +7,7 @@
     "start": "electron .",
     "clean": "rimraf dist",
     "build": "npm run clean && electron-builder",
-    "build:win": "npm run clean && electron-builder --win",
+    "build:win": "npm run clean && electron-builder --win portable",
     "build:mac": "npm run clean && electron-builder --mac",
     "package:extension": "cd extension && powershell Compress-Archive -Path * -DestinationPath ../dist/WebElementTracker-Extension.zip -Force"
   },
@@ -39,6 +39,10 @@
     "buildDependenciesFromSource": true,
     "win": {
       "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        },
         "nsis"
       ],
       "icon": "src/assets/icon.png"
