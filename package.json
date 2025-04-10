@@ -1,6 +1,6 @@
 {
   "name": "web-element-tracker",
-  "version": "${process.env.APP_VERSION || '0.0.0'}",
+  "version": "0.0.0",
   "description": "A powerful desktop tool that monitors specific web elements in real-time and displays their changes directly on your screen. This unobtrusive sticky widget stays on top of your workspace, providing instant visibility to the data that matters most to you",
   "main": "src/main.js",
   "scripts": {

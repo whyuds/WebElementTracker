@@ -40,19 +40,25 @@ jobs:
         run: echo "version=0.0.0" >> $GITHUB_OUTPUT
         if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
 
+      - name: Update version in package.json
+        run: |
+          $version = if ($env:GITHUB_REF.StartsWith('refs/tags/v')) { $env:GITHUB_REF.Substring(11) } else { '0.0.0' }
+          $content = Get-Content package.json -Raw | ConvertFrom-Json
+          $content.version = $version
+          $content | ConvertTo-Json -Depth 100 | Set-Content package.json
+        shell: pwsh
+
       - name: Build for Windows
         if: matrix.os == 'windows-latest'
         run: npm run build:win
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          APP_VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && steps.get_version.outputs.version || steps.default_version.outputs.version }}
 
       - name: Build for macOS
         if: matrix.os == 'macos-latest'
         run: npm run build:mac
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          APP_VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && steps.get_version.outputs.version || steps.default_version.outputs.version }}
 
       - name: Package and Upload Chrome Extension
         if: matrix.os == 'windows-latest'
