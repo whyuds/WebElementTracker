@@ -313,6 +313,21 @@ function updateConnectionStatus(connected) {
   }
 }
 
+// 更新扩展图标
+function updateExtensionIcon(isMonitoring) {
+  const iconPath = isMonitoring ? {
+    16: 'images/icon_16_active.png',
+    48: 'images/icon_48_active.png',
+    128: 'images/icon_128_active.png'
+  } : {
+    16: 'images/icon_16.png',
+    48: 'images/icon_48.png',
+    128: 'images/icon_128.png'
+  };
+
+  chrome.action.setIcon({ path: iconPath });
+}
+
 // 开始监控
 async function startMonitoring(selector, interval) {
   // 获取当前活动标签页
@@ -336,6 +351,7 @@ async function startMonitoring(selector, interval) {
     });
     
     isMonitoring = true;
+    updateExtensionIcon(true);
     sendStatusToPopup();
   } catch (error) {
     console.error('Failed to inject monitor script:', error);
@@ -407,6 +423,7 @@ async function stopMonitoring() {
   isMonitoring = false;
   monitoringTabId = null;
   monitoringSelector = null;
+  updateExtensionIcon(false);
   sendStatusToPopup();
 }
 
