@@ -16,7 +16,6 @@ const downloadAppBtn = document.getElementById('downloadApp');
 const startMonitoringBtn = document.getElementById('startMonitoring');
 const stopMonitoringBtn = document.getElementById('stopMonitoring');
 const connectionStatus = document.getElementById('connectionStatus');
-const connectionStatusText = document.getElementById('connectionStatusText');
 
 // 初始化
 document.addEventListener('DOMContentLoaded', async () => {
@@ -144,13 +143,11 @@ function updateMonitoringStatus(monitoring) {
 function updateConnectionStatus(connected) {
   if (connected) {
     connectionStatus.classList.add('connected');
-    connectionStatusText.textContent = 'connected';
     if (selectedSelector) {
       startMonitoringBtn.disabled = false;
     }
   } else {
     connectionStatus.classList.remove('connected');
-    connectionStatusText.textContent = 'disconnected';
     startMonitoringBtn.disabled = true;
   }
 }

@@ -29,9 +29,9 @@ h2 {
 
 .section {
   background-color: #fff;
-  border-radius: 5px;
-  padding: 12px;
-  margin-bottom: 15px;
+  border-radius: 2px;
+  padding: 6px;
+  margin-bottom: 5px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -131,7 +131,7 @@ input[type="number"] {
 }
 
 .download-app {
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .download-hint {
