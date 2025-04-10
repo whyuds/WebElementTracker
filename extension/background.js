@@ -8,6 +8,21 @@ let monitoringIntervalId = null;
 let popupPort = null;
 let messageQueue = []; // 消息队列
 
+// 监听页面刷新
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && isMonitoring && tabId === monitoringTabId) {
+    // 页面刷新完成且是之前监控的标签页
+    console.log('Tab refreshed, reinjecting monitor script');
+    chrome.scripting.executeScript({
+      target: { tabId: monitoringTabId },
+      function: injectMonitor,
+      args: [monitoringSelector, monitoringInterval]
+    }).catch(error => {
+      console.error('Failed to reinject monitor script:', error);
+    });
+  }
+});
+
 // 监听来自popup的连接
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name === 'popup') {
