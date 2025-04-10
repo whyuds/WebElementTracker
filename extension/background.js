@@ -188,28 +188,88 @@ function setupElementSelector() {
   
   // 生成CSS选择器
   function generateSelector(el) {
+    // If element has an ID, use it (most specific)
     if (el.id) {
       return `#${el.id}`;
     }
     
+    // Start with the element's tag
+    let selector = el.tagName.toLowerCase();
+    
+    // Add classes if available
     if (el.className) {
-      const classes = Array.from(el.classList).join('.');
-      return `.${classes}`;
+      const classes = Array.from(el.classList)
+        .filter(cls => !cls.includes(' '))  // Filter out complex classes
+        .join('.');
+      
+      if (classes) {
+        selector += `.${classes}`;
+      }
     }
     
-    let selector = el.tagName.toLowerCase();
-    let parent = el.parentElement;
+    // Add attributes that can help identify the element
+    ['name', 'type', 'role', 'data-testid'].forEach(attr => {
+      if (el.hasAttribute(attr)) {
+        selector += `[${attr}="${el.getAttribute(attr)}"]`;
+      }
+    });
     
-    if (parent) {
-      const siblings = Array.from(parent.children);
-      if (siblings.length > 1) {
+    // Check if this selector is still not specific enough
+    let matchCount = document.querySelectorAll(selector).length;
+    
+    // If the selector isn't specific enough, add structural information
+    if (matchCount > 1) {
+      // Try adding nth-child
+      let parent = el.parentElement;
+      if (parent) {
+        const siblings = Array.from(parent.children);
         const index = siblings.indexOf(el);
-        selector += `:nth-child(${index + 1})`;
+        const nthChild = `:nth-child(${index + 1})`;
+        
+        const moreSpecificSelector = `${selector}${nthChild}`;
+        if (document.querySelectorAll(moreSpecificSelector).length === 1) {
+          return moreSpecificSelector;
+        }
+        
+        // If still not specific enough, build a path with parent elements
+        let path = selector;
+        let currentElement = el;
+        let depth = 0;
+        const maxDepth = 3; // Limit the depth to avoid overly complex selectors
+        
+        while (matchCount > 1 && depth < maxDepth && currentElement.parentElement) {
+          currentElement = currentElement.parentElement;
+          let parentSelector = currentElement.tagName.toLowerCase();
+          
+          // Add parent's ID if available
+          if (currentElement.id) {
+            path = `#${currentElement.id} > ${path}`;
+            break;
+          }
+          
+          // Add parent's class if available
+          if (currentElement.className) {
+            const parentClasses = Array.from(currentElement.classList)
+              .filter(cls => !cls.includes(' '))
+              .join('.');
+            
+            if (parentClasses) {
+              parentSelector += `.${parentClasses}`;
+            }
+          }
+          
+          path = `${parentSelector} > ${path}`;
+          matchCount = document.querySelectorAll(path).length;
+          depth++;
+        }
+        
+        return path;
       }
     }
     
     return selector;
   }
+  
   
   // 添加事件监听器
   document.addEventListener('mouseover', window._elementSelectorMouseoverHandler);
