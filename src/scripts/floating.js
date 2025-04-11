@@ -82,9 +82,9 @@ function updateDataDisplay(data) {
   // 更新时间戳
   if (data.timestamp) {
     const date = new Date(data.timestamp);
-    updateTime.textContent = `Updated: ${date.toLocaleTimeString()}`;
+    updateTime.textContent = `${date.toLocaleTimeString()}`;
   } else {
-    updateTime.textContent = 'Updated: --';
+    updateTime.textContent = '--';
   }
 }
 
