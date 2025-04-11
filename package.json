@@ -1,6 +1,6 @@
 {
   "name": "web-element-tracker",
-  "version": "0.0.0",
+  "version": "1.0.2",
   "description": "A powerful desktop tool that monitors specific web elements in real-time and displays their changes directly on your screen. This unobtrusive sticky widget stays on top of your workspace, providing instant visibility to the data that matters most to you",
   "main": "src/main.js",
   "scripts": {
@@ -8,8 +8,7 @@
     "clean": "rimraf dist",
     "build": "npm run clean && electron-builder",
     "build:win": "npm run clean && electron-builder --win portable",
-    "build:mac": "npm run clean && electron-builder --mac",
-    "package:extension": "cd extension && powershell Compress-Archive -Path * -DestinationPath ../dist/WebElementTracker-Extension.zip -Force"
+    "build:mac": "npm run clean && electron-builder --mac"
   },
   "keywords": [
     "electron",
@@ -31,6 +30,7 @@
   "build": {
     "appId": "com.example.web-element-tracker",
     "productName": "WebElementTracker",
+    "artifactName": "${productName}-${version}.${ext}",
     "directories": {
       "output": "dist"
     },

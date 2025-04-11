@@ -29,42 +29,24 @@ jobs:
       
       - name: Install dependencies
         run: npm install
-      
-      - name: Extract version from tag
-        id: get_version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-        if: startsWith(github.ref, 'refs/tags/v')
 
-      - name: Set default version
-        id: default_version
-        run: echo "version=0.0.0" >> $GITHUB_OUTPUT
-        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
-
-      - name: Update version in package.json
-        run: |
-          $version = if ($env:GITHUB_REF.StartsWith('refs/tags/v')) { $env:GITHUB_REF.Substring(11) } else { '0.0.0' }
-          $content = Get-Content package.json -Raw | ConvertFrom-Json
-          $content.version = $version
-          $content | ConvertTo-Json -Depth 100 | Set-Content package.json
-        shell: pwsh
-
-      - name: Build for Windows
+      - name: Build Desktop Windows
         if: matrix.os == 'windows-latest'
         run: npm run build:win
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: Build for macOS
+      - name: Build Desktop macOS
         if: matrix.os == 'macos-latest'
         run: npm run build:mac
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: Package and Upload Chrome Extension
+      - name: Build Extension
         if: matrix.os == 'windows-latest'
         run: |
           cd extension
-          powershell Compress-Archive -Path "*" -DestinationPath "../dist/WebElementTracker-Extension-v${{ startsWith(github.ref, 'refs/tags/v') && steps.get_version.outputs.version || steps.default_version.outputs.version }}.zip" -Force
+          powershell Compress-Archive -Path "*" -DestinationPath "../dist/extension-1.0.2.zip" -Force
           cd ..
         shell: bash
       
@@ -75,7 +57,7 @@ jobs:
           name: windows-artifacts
           path: |
             dist/*.exe
-            dist/WebElementTracker-Extension*zip
+            dist/*.zip
 
       - name: Upload macOS artifacts
         if: matrix.os == 'macos-latest'
@@ -99,7 +81,7 @@ jobs:
           files: |
             windows-artifacts/*.exe
             macos-artifacts/*.dmg
-            extension-artifact/WebElementTracker-Extension*zip
+            windows-artifacts/*.zip
           draft: false
           prerelease: false
         env:
