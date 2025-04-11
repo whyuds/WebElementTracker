@@ -7,6 +7,10 @@ let monitoringInterval = 5000; // 默认5秒
 let monitoringIntervalId = null;
 let popupPort = null;
 let messageQueue = []; // 消息队列
+let lastMonitorData = null; // 上次监控数据
+let monitoringAlarmName = 'elementMonitorAlarm'; // 定时器名称
+let retryCount = 0; // 重试计数器
+let maxRetries = 3; // 最大重试次数
 
 // 监听页面刷新
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -350,9 +354,19 @@ function connectWebSocket(address) {
   try {
     websocket = new WebSocket(address);
     
+    // 保存地址以便重连
+    if (popupPort) {
+      popupPort._lastAddress = address;
+    }
+    
     websocket.onopen = () => {
       console.log('WebSocket connected');
       updateConnectionStatus(true);
+      
+      // 如果有最后监控的数据，尝试重新发送
+      if (lastMonitorData && isMonitoring) {
+        sendDataToDesktopApp(lastMonitorData);
+      }
     };
     
     websocket.onclose = () => {
@@ -430,6 +444,17 @@ async function startMonitoring(selector, interval) {
     isMonitoring = true;
     updateExtensionIcon(true);
     sendStatusToPopup();
+    
+    // 设置定时器，确保即使在后台也能继续监控
+    // 先清除可能存在的旧定时器
+    chrome.alarms.clear(monitoringAlarmName);
+    
+    // 创建新的定时器，间隔时间与监控间隔相同
+    chrome.alarms.create(monitoringAlarmName, {
+      periodInMinutes: monitoringInterval / (1000 * 60) // 转换为分钟
+    });
+    
+    console.log(`Alarm created with interval: ${monitoringInterval / (1000 * 60)} minutes`);
   } catch (error) {
     console.error('Failed to inject monitor script:', error);
   }
@@ -497,9 +522,14 @@ async function stopMonitoring() {
     console.error('Failed to stop monitoring:', error);
   }
   
+  // 清除定时器
+  chrome.alarms.clear(monitoringAlarmName);
+  console.log('Monitoring alarm cleared');
+  
   isMonitoring = false;
   monitoringTabId = null;
   monitoringSelector = null;
+  retryCount = 0;
   updateExtensionIcon(false);
   sendStatusToPopup();
 }
@@ -524,8 +554,84 @@ function sendDataToDesktopApp(data) {
   if (websocket && websocket.readyState === WebSocket.OPEN) {
     try {
       websocket.send(JSON.stringify(data));
+      lastMonitorData = data; // 保存最后一次成功发送的数据
+      retryCount = 0; // 重置重试计数
     } catch (error) {
       console.error('Failed to send data to desktop app:', error);
+      handleSendError();
     }
+  } else if (websocket) {
+    console.warn('WebSocket not open, attempting to reconnect...');
+    handleSendError();
+  }
+}
+
+// 处理发送错误
+function handleSendError() {
+  if (retryCount < maxRetries) {
+    retryCount++;
+    console.log(`Retry attempt ${retryCount} of ${maxRetries}`);
+    // 尝试重新连接WebSocket
+    if (popupPort) {
+      const lastAddress = popupPort._lastAddress || 'ws://localhost:9555';
+      connectWebSocket(lastAddress);
+    }
+  } else {
+    console.error('Max retries reached, giving up');
+    retryCount = 0;
+  }
+}
+
+// 监听alarm事件
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === monitoringAlarmName && isMonitoring) {
+    console.log('Alarm triggered, performing monitoring task');
+    performMonitoring();
+  }
+});
+
+// 执行监控任务
+async function performMonitoring() {
+  if (!isMonitoring || !monitoringTabId) return;
+  
+  try {
+    // 检查标签页是否仍然存在
+    const tab = await chrome.tabs.get(monitoringTabId).catch(() => null);
+    if (!tab) {
+      console.warn('Monitored tab no longer exists');
+      stopMonitoring();
+      return;
+    }
+    
+    // 执行监控脚本
+    const results = await chrome.scripting.executeScript({
+      target: { tabId: monitoringTabId },
+      function: () => {
+        // 检查元素是否存在
+        if (!window._monitorInfo) return null;
+        
+        const selector = window._monitorInfo.selector;
+        const element = document.querySelector(selector);
+        
+        if (element) {
+          return {
+            text: element.textContent.trim(),
+            html: element.innerHTML,
+            url: window.location.href,
+            timestamp: new Date().toISOString()
+          };
+        } else {
+          console.warn(`Element not found: ${selector}`);
+          return null;
+        }
+      }
+    });
+    
+    // 处理结果
+    if (results && results[0] && results[0].result) {
+      sendDataToDesktopApp(results[0].result);
+    }
+  } catch (error) {
+    console.error('Error during background monitoring:', error);
   }
 }
