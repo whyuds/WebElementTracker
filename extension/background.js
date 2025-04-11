@@ -88,7 +88,7 @@ async function injectElementSelector(tabId) {
 function setupElementSelector() {
   // 如果已经存在选择器，则移除
   if (window._elementSelectorActive) {
-    document.removeEventListener('click', window._elementSelectorClickHandler);
+    document.removeEventListener('click', window._elementSelectorClickHandler, true); // 移除捕获阶段的点击事件监听器
     document.removeEventListener('mouseover', window._elementSelectorMouseoverHandler);
     document.removeEventListener('mouseout', window._elementSelectorMouseoutHandler);
     if (window._elementSelectorHighlight) {
@@ -131,8 +131,10 @@ function setupElementSelector() {
   
   // 点击处理
   window._elementSelectorClickHandler = function(event) {
+    // 在事件捕获阶段就阻止事件传播和默认行为
     event.preventDefault();
     event.stopPropagation();
+    event.stopImmediatePropagation(); // 阻止其他事件监听器被调用
     
     if (!currentElement) return;
     
@@ -149,7 +151,7 @@ function setupElementSelector() {
     });
     
     // 清理
-    document.removeEventListener('click', window._elementSelectorClickHandler);
+    document.removeEventListener('click', window._elementSelectorClickHandler, true); // 移除捕获阶段的点击事件监听器
     document.removeEventListener('mouseover', window._elementSelectorMouseoverHandler);
     document.removeEventListener('mouseout', window._elementSelectorMouseoutHandler);
     document.body.removeChild(highlight);
@@ -271,10 +273,10 @@ function setupElementSelector() {
   }
   
   
-  // 添加事件监听器
+  // 添加事件监听器，使用捕获阶段(第三个参数为true)来确保在元素自身的事件处理前拦截
   document.addEventListener('mouseover', window._elementSelectorMouseoverHandler);
   document.addEventListener('mouseout', window._elementSelectorMouseoutHandler);
-  document.addEventListener('click', window._elementSelectorClickHandler);
+  document.addEventListener('click', window._elementSelectorClickHandler, true); // 在捕获阶段处理点击事件
   window._elementSelectorActive = true;
   
   // 显示提示

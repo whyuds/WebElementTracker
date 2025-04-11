@@ -1,6 +1,5 @@
 // DOM元素
 const connectionStatus = document.getElementById('connectionStatus');
-const connectionStatusText = document.getElementById('connectionStatusText');
 const wsPortInput = document.getElementById('wsPort');
 const changePortBtn = document.getElementById('changePortBtn');
 const toggleFloatingBtn = document.getElementById('toggleFloatingBtn');
@@ -94,10 +93,8 @@ ipcRenderer.on('update-data', (event, data) => {
 function updateConnectionStatus(connected) {
   if (connected) {
     connectionStatus.classList.add('connected');
-    connectionStatusText.textContent = 'Connected';
   } else {
     connectionStatus.classList.remove('connected');
-    connectionStatusText.textContent = 'Disconnected';
   }
 }
 
