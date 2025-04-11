@@ -319,6 +319,13 @@ chrome.runtime.onMessage.addListener((message, sender) => {
       console.log('Popup port not available, queueing message');
       messageQueue.push(popupMessage);
     }
+    
+    // 自动尝试连接到桌面应用
+    chrome.storage.local.get(['wsAddress'], (result) => {
+      const wsAddress = result.wsAddress || 'ws://localhost:9555';
+      connectWebSocket(wsAddress);
+    });
+    
     return true;
   }
   
@@ -367,6 +374,37 @@ function connectWebSocket(address) {
       if (lastMonitorData && isMonitoring) {
         sendDataToDesktopApp(lastMonitorData);
       }
+      
+      // 显示连接成功的toast提示
+      chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        if (tabs && tabs[0]) {
+          chrome.scripting.executeScript({
+            target: {tabId: tabs[0].id},
+            function: (address) => {
+              const successToast = document.createElement('div');
+              successToast.textContent = `已成功连接到桌面应用 (${address})`;
+              successToast.style.position = 'fixed';
+              successToast.style.top = '20px';
+              successToast.style.left = '50%';
+              successToast.style.transform = 'translateX(-50%)';
+              successToast.style.padding = '10px 20px';
+              successToast.style.backgroundColor = '#4CAF50';
+              successToast.style.color = '#fff';
+              successToast.style.borderRadius = '4px';
+              successToast.style.zIndex = '10001';
+              successToast.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+              document.body.appendChild(successToast);
+              
+              setTimeout(() => {
+                if (document.body.contains(successToast)) {
+                  document.body.removeChild(successToast);
+                }
+              }, 3000);
+            },
+            args: [address]
+          }).catch(error => console.error('Failed to show toast:', error));
+        }
+      });
     };
     
     websocket.onclose = () => {
