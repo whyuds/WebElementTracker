@@ -41,7 +41,7 @@ wsAddressInput.addEventListener('change', saveSettings);
 
 // 打开下载页面
 function openDownloadPage() {
-  chrome.tabs.create({ url: 'https://github.com/whyuds/WebElementTracker/releases' });
+  chrome.tabs.create({ url: 'https://github.com/whyuds/WebElementTracker/releases/tag/v1.0.2' });
 }
 
 // 连接到background script
